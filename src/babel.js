@@ -3,7 +3,8 @@ export default function({ types: t, template }) {
     visitor: {
       ImportDeclaration(path) {
         let source = path.node.source.value;
-        if (source !== 'react-loadable') return;
+
+        if (!source || !source.endsWith('LazyLoader')) return;
 
         let defaultSpecifier = path.get('specifiers').find(specifier => {
           return specifier.isImportDefaultSpecifier();
@@ -81,7 +82,7 @@ export default function({ types: t, template }) {
               t.identifier('modules'),
               t.arrayExpression(
                 dynamicImports.map(dynamicImport => {
-                  return dynamicImport.get('arguments')[0].node;
+                    return dynamicImport.get('arguments')[0].node
                 })
               )
             )
