@@ -18,6 +18,7 @@
     "prepublish": "yarn build"
   },
   "dependencies": {
+    "lodash": "^4.17.5",
     "prop-types": "^15.5.0"
   },
   "devDependencies": {

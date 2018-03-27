@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default function({ types: t, template }) {
   return {
     visitor: {
@@ -52,6 +54,16 @@ export default function({ types: t, template }) {
           loaderMethod.traverse({
             Import(path) {
               dynamicImports.push(path.parentPath);
+              const bundle = path.parentPath.get('arguments')[0];
+
+              if (bundle.node.leadingComments || !bundle.node.leadingComments.length) {
+                const chunkName = _.chain(bundle.node.value.split('/').slice(-2))
+                  .camelCase()
+                  .upperFirst()
+                  .value();
+
+                bundle.addComment('leading', `webpackChunkName: "${chunkName}"`);
+              }
             }
           });
 
