@@ -13,7 +13,7 @@ function buildManifest(compiler, compilation) {
         let id = module.id;
         let name = typeof module.libIdent === 'function' ? module.libIdent({ context }) : null;
         let publicPath = url.resolve(compilation.outputOptions.publicPath || '', file);
-        
+
         let currentModule = module;
         if (module.constructor.name === 'ConcatenatedModule') {
           currentModule = module.rootModule;
@@ -22,6 +22,9 @@ function buildManifest(compiler, compilation) {
           manifest[currentModule.rawRequest] = [];
         }
 
+        console.log(`[react-loadable] ${currentModule.rawRequest}`);
+        console.log(`[react-loadable] ${currentModule.userRequest}`);
+        console.log(`[react-loadable] ${currentModule.request}`);
         manifest[currentModule.rawRequest].push({ id, name, file, publicPath });
       });
     });
