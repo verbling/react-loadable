@@ -76,6 +76,8 @@ export default function({ types: t, template }) {
                 [],
                 t.arrayExpression(
                   dynamicImports.map(dynamicImport => {
+                    console.log(`[loadable-dynamic-import] ${dynamicImport.get('arguments')[0].node.value}`);
+
                     return t.callExpression(
                       t.memberExpression(
                       	t.identifier('require'),
