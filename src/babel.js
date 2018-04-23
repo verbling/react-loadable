@@ -98,7 +98,7 @@ export default function({ types: t, template }) {
               t.identifier('modules'),
               t.arrayExpression(
                 dynamicImports.map(dynamicImport => {
-                    const path = resolve(state.opts.filename, resodynamicImport.get('arguments')[0].node);
+                    const path = resolve(state.opts.filename, dynamicImport.get('arguments')[0].node);
                     return md5(path);
                 })
               )
