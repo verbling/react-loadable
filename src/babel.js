@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import md5 from './md5';
-import resolve from 'path';
+import {resolve, dirname} from 'path';
 
 export default function({ types: t, template }) {
   return {
@@ -78,11 +78,9 @@ export default function({ types: t, template }) {
                 [],
                 t.arrayExpression(
                   dynamicImports.map(dynamicImport => {
-                    console.log(`[loadable-dynamic-import] ${dynamicImport.get('arguments')[0].node.value}`);
-
                     return t.callExpression(
                       t.memberExpression(
-                      	t.identifier('require'),
+                        t.identifier('require'),
                         t.identifier('resolveWeak'),
                       ),
                       [dynamicImport.get('arguments')[0].node],
@@ -98,8 +96,10 @@ export default function({ types: t, template }) {
               t.identifier('modules'),
               t.arrayExpression(
                 dynamicImports.map(dynamicImport => {
-                    const path = resolve(state.opts.filename, dynamicImport.get('arguments')[0].node);
-                    return md5(path);
+                  const relativePath = dynamicImport.get('arguments')[0].node.value;
+                  const absolutePath = resolve(dirname(state.filename), relativePath);
+
+                  return t.stringLiteral(md5(absolutePath));
                 })
               )
             )

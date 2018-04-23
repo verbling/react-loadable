@@ -1,8 +1,7 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
-const url = require('url');
-const md5 = require('./md5');
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
+import md5 from './md5';
 
 function buildManifest(compiler, compilation) {
   let context = compiler.options.context;
@@ -18,6 +17,10 @@ function buildManifest(compiler, compilation) {
         let currentModule = module;
         if (module.constructor.name === 'ConcatenatedModule') {
           currentModule = module.rootModule;
+        } else if (module.constructor.name === 'MultiModule') {
+          return;
+        } else if (module.constructor.name === 'RawModule') {
+          currentModule = module.issuer;
         }
 
         const request = md5(currentModule.userRequest);
@@ -34,7 +37,7 @@ function buildManifest(compiler, compilation) {
   return manifest;
 }
 
-class ReactLoadablePlugin {
+export class ReactLoadablePlugin {
   constructor(opts = {}) {
     this.filename = opts.filename;
   }
@@ -57,11 +60,8 @@ class ReactLoadablePlugin {
   }
 }
 
-function getBundles(manifest, moduleIds) {
+export function getBundles(manifest, moduleIds) {
   return moduleIds.reduce((bundles, moduleId) => {
     return bundles.concat(manifest[moduleId]);
   }, []);
 }
-
-exports.ReactLoadablePlugin = ReactLoadablePlugin;
-exports.getBundles = getBundles;

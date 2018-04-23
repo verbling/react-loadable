@@ -1,9 +1,10 @@
-const crypto = require('crypto');
+import crypto from 'crypto';
+import {extname} from 'path';
 
-module.exports = function md5(text) {
+export default function md5(text) {
   return crypto
     .createHash('md5')
-    .update(text)
+    .update(text.replace(extname(text), ''))
     .digest('hex')
     .slice(0, 8);
 }
