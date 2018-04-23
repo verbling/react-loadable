@@ -1,6 +1,6 @@
-import crypto from 'crypto';
+const crypto = require('crypto');
 
-export default function md5(text) {
+module.exports = function md5(text) {
   return crypto
     .createHash('md5')
     .update(text)

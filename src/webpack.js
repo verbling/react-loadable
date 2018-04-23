@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const md5 = require('./md5');
 
 function buildManifest(compiler, compilation) {
   let context = compiler.options.context;
@@ -18,14 +19,14 @@ function buildManifest(compiler, compilation) {
         if (module.constructor.name === 'ConcatenatedModule') {
           currentModule = module.rootModule;
         }
-        if (!manifest[currentModule.rawRequest]) {
-          manifest[currentModule.rawRequest] = [];
+
+        const request = md5(currentModule.userRequest);
+
+        if (!manifest[request]) {
+          manifest[request] = [];
         }
 
-        console.log(`[react-loadable] ${currentModule.rawRequest}`);
-        console.log(`[react-loadable] ${currentModule.userRequest}`);
-        console.log(`[react-loadable] ${currentModule.request}`);
-        manifest[currentModule.rawRequest].push({ id, name, file, publicPath });
+        manifest[request].push({ id, name, file, publicPath });
       });
     });
   });
