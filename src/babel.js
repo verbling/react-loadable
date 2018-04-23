@@ -1,9 +1,10 @@
 import _ from 'lodash';
+import md5 from './md5';
 
 export default function({ types: t, template }) {
   return {
     visitor: {
-      ImportDeclaration(path) {
+      ImportDeclaration(path, state) {
         let source = path.node.source.value;
 
         if (!source || !source.endsWith('LazyLoader')) return;
@@ -77,6 +78,7 @@ export default function({ types: t, template }) {
                 t.arrayExpression(
                   dynamicImports.map(dynamicImport => {
                     console.log(`[loadable-dynamic-import] ${dynamicImport.get('arguments')[0].node.value}`);
+                    console.dir(state.file);
 
                     return t.callExpression(
                       t.memberExpression(
