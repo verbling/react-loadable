@@ -19,7 +19,7 @@ function buildManifest(compiler, compilation) {
           currentModule = module.rootModule;
         } else if (module.constructor.name === 'MultiModule') {
           return;
-        } else if (module.constructor.name === 'RawModule') {
+        } else if (module.constructor.name === 'RawModule' || module.constructor.name === 'CssModule') {
           currentModule = module.issuer;
         }
 
